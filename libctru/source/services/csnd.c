@@ -325,7 +325,7 @@ CSND_ChnInfo* csndChnGetInfo(u32 channel)
 	return (CSND_ChnInfo*)(&csndSharedMem[(csndOffsets[1] + channel*0xc) >> 2]);
 }
 
-Result csndChnGetState(u32 channel, u32 *out)
+Result csndChnGetState(u32 channel, CSND_ChnInfo* out)
 {
 	Result ret = 0;
 	channel = csndChnIdx[channel];
@@ -333,20 +333,20 @@ Result csndChnGetState(u32 channel, u32 *out)
 	if ((ret = CSND_UpdateChnInfo(true)) != 0)return ret;
 
 	memcpy(out, (const void*)&csndSharedMem[(csndOffsets[1] + channel*0xc) >> 2], 0xc);
-	//out[2] -= 0x0c000000;
+	//out->samplePAddr -= 0x0c000000;
 
 	return 0;
 }
 
-Result csndChnIsPlaying(u32 channel, u8 *status)
+Result csndChnIsPlaying(u32 channel, u8* status)
 {
 	Result ret;
-	u32 entry[0xc>>2];
+	CSND_ChnInfo entry;
 
-	ret = csndChnGetState(channel, entry);
+	ret = csndChnGetState(channel, &entry);
 	if(ret!=0)return ret;
 
-	*status = entry[0] & 0xff;
+	*status = entry.active;
 
 	return 0;
 }

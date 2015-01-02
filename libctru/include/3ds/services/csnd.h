@@ -5,13 +5,13 @@
 
 #define CSND_TIMER(n) (0x3FEC3FC / ((u32)(n)))
 
-typedef enum
+enum
 {
-    CSND_ENCODING_PCM8,
+    CSND_ENCODING_PCM8 = 0,
     CSND_ENCODING_PCM16,
     CSND_ENCODING_ADPCM, // IMA-ADPCM
     CSND_ENCODING_PSG, // Similar to DS?
-} CSND_ENCODING;
+};
 
 #define SOUND_CHANNEL(n) ((u32)(n) & 0x1F)
 #define SOUND_FORMAT(n) ((u32)(n) << 12)
@@ -69,5 +69,5 @@ Result csndChnPlaySound(int chn, u32 flags, u32 sampleRate, void* data0, void* d
 
 CSND_ChnInfo* csndChnGetInfo(u32 channel); // Requires previous CSND_UpdateChnInfo()
 
-Result csndChnGetState(u32 channel, u32 *out);
-Result csndChnIsPlaying(u32 channel, u8 *status);
+Result csndChnGetState(u32 channel, CSND_ChnInfo* out);
+Result csndChnIsPlaying(u32 channel, u8* status);
